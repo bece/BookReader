@@ -48,7 +48,7 @@ public class Window extends JFrame {
 	public void initComponents () {
 		JLabel labelPicture = new JLabel ();
 		JPanel panelPicture = new JPanel ();
-		ImageIcon iiPicture = new ImageIcon ("/home/jeremy/Pictures/Wallpapers/lara-croft-tomb-raider.jpg");
+		ImageIcon iiPicture = new ImageIcon ("etc/pictures/lara-croft-tomb-raider.jpg");
 		
 		labelPicture.setText ("Picture");
 		labelPicture.setToolTipText ("Picture Tomb Raider");
