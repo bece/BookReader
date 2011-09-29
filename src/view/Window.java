@@ -10,8 +10,12 @@ import java.awt.event.MouseListener;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -31,6 +35,10 @@ public class Window extends JFrame implements MouseListener {
 	private JButton buttonNext, buttonPrev;
 	private ImageIcon iiPicture1, iiPicture2;
 	private JLabel labelPicture;
+	private JMenuBar menuBar;
+	private JMenu menuFile;
+	private JMenuItem menuItemOpenDir;
+	private JFileChooser fileChooserDir;
 
 	/*************************************************
 	 * @name : Window
@@ -47,9 +55,25 @@ public class Window extends JFrame implements MouseListener {
 		this.setTitle ("BookReader - Have a good reading !");
 		this.setLocationRelativeTo (null);
 		this.setLookAndFeel();
+		this.initMenus();
 		this.initComponents ();
 		this.pack();
 		this.setVisible (true);
+	}
+	
+	/*************************************************
+	 * @name : initMenus
+	 * @arguments : none
+	 * @comment :
+	 * @return : none
+	 *************************************************/
+	public void initMenus () {
+		menuBar = new JMenuBar();
+		menuFile = new JMenu("File");
+		menuItemOpenDir = new JMenuItem("Open Directory ...");
+		menuItemOpenDir.add(menuItemOpenDir);
+		menuBar.add(menuFile);
+		this.setJMenuBar(menuBar);
 	}
 
 	/*************************************************
@@ -126,7 +150,9 @@ public class Window extends JFrame implements MouseListener {
 			buttonPrev.setEnabled(false);
 			labelPicture.setIcon(iiPicture1);
 			buttonNext.setEnabled(true);
-		}
+		} else if (arg0.getSource().equals(menuItemOpenDir)) {
+			
+		}	
 	}
 
 	/* (non-Javadoc)
