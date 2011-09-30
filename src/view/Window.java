@@ -37,12 +37,13 @@ public class Window extends JFrame implements MouseListener, ActionListener {
 	 */
 	private static final long	serialVersionUID	= -3739008754324139579L;
 	private JButton				buttonNext, buttonPrev;
-	private ImageIcon			iiPicture1, iiPicture2;
 	private JLabel				labelPicture;
 	private JMenuBar			menuBar;
 	private JMenu				menuFile;
 	private JMenuItem			menuItemOpenDir;
 	private JFileChooser		fileChooserDir;
+	private ArrayList<ImageIcon> listImageIcon;
+	private int currentPicture = 0;
 
 	/*************************************************
 	 * @name : Window
@@ -99,15 +100,12 @@ public class Window extends JFrame implements MouseListener, ActionListener {
 		JPanel panelNextPrev = new JPanel ();
 		JPanel container = new JPanel ();
 
-		iiPicture1 = new ImageIcon ("etc/pictures/lara-croft-tomb-raider.jpg");
-		iiPicture2 = new ImageIcon ("etc/pictures/tomb-raider.jpg");
-
 		buttonNext.addMouseListener (this);
+		buttonNext.setEnabled(false);
 		buttonPrev.addMouseListener (this);
 		buttonPrev.setEnabled (false);
 
 		labelPicture.setToolTipText ("Picture Tomb Raider");
-		labelPicture.setIcon (iiPicture1);
 		panelPicture.add (labelPicture);
 
 		panelNext.setLayout (new FlowLayout (FlowLayout.LEFT));
@@ -141,9 +139,16 @@ public class Window extends JFrame implements MouseListener, ActionListener {
 		}
 	}
 	
-	public ArrayList<ImageIcon> getPictureFromDirectoy (String path) {
-		
-		return null;
+	public void getPictureFromDirectoy (String path) {
+		listImageIcon = new ArrayList<ImageIcon>();
+		File directory = new File(path);
+		File[] list = directory.listFiles();
+		if (list != null) {
+			for (int i=0; i < list.length; i++) {
+				System.out.println(list[i].getAbsolutePath());
+				listImageIcon.add(i, new ImageIcon(list[i].getAbsolutePath()));
+			}
+		}
 	}
 
 	/*
@@ -154,14 +159,16 @@ public class Window extends JFrame implements MouseListener, ActionListener {
 	@Override
 	public void mouseClicked (MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		if (arg0.getSource ().equals (buttonNext)) {
-			buttonNext.setEnabled (false);
-			labelPicture.setIcon (iiPicture2);
-			buttonPrev.setEnabled (true);
-		} else if (arg0.getSource ().equals (buttonPrev)) {
-			buttonPrev.setEnabled (false);
-			labelPicture.setIcon (iiPicture1);
-			buttonNext.setEnabled (true);
+		if (arg0.getSource ().equals (buttonNext) && buttonNext.isEnabled()) {
+			currentPicture++;
+			if (currentPicture >= listImageIcon.size() - 1) buttonNext.setEnabled (false);
+			labelPicture.setIcon (listImageIcon.get(currentPicture));
+			if (!buttonPrev.isEnabled()) buttonPrev.setEnabled (true);
+		} else if (arg0.getSource ().equals (buttonPrev) && buttonPrev.isEnabled()) {
+			currentPicture--;
+			if (currentPicture <= 0) buttonPrev.setEnabled (false);
+			labelPicture.setIcon (listImageIcon.get(currentPicture));
+			if (!buttonNext.isEnabled()) buttonNext.setEnabled (true);
 		}
 	}
 
@@ -226,6 +233,10 @@ public class Window extends JFrame implements MouseListener, ActionListener {
 			int fileChooserReturn = fileChooserDir.showOpenDialog (null);
 			if (fileChooserReturn == JFileChooser.APPROVE_OPTION) {
 				System.out.println (fileChooserDir.getSelectedFile ().getPath ());
+				getPictureFromDirectoy(fileChooserDir.getSelectedFile ().getPath ());
+				labelPicture.setIcon(listImageIcon.get(0));
+				buttonNext.setEnabled(true);
+				this.pack();
 			}
 		}
 	}
